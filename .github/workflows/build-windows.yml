@@ -27,7 +27,7 @@ jobs:
         pyinstaller --onefile --windowed --name "UniversalMobileMaster" universal_mobile_master.py
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Universal-Mobile-Master-Windows
         path: dist/UniversalMobileMaster.exe
