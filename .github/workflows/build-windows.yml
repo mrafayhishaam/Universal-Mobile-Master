@@ -3,31 +3,37 @@ name: Build Windows EXE
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
+  workflow_dispatch: # Manual run button ke liye
 
 jobs:
-  build-windows:
+  build:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller customtkinter psutil
+      - name: Install Dependencies
+        run: |
+          pip install pyinstaller customtkinter psutil
 
-    - name: Build EXE
-      run: |
-        pyinstaller --onefile --windowed --name "UniversalMobileMaster" universal_mobile_master.py
+      - name: Build EXE
+        run: |
+          pyinstaller --onefile --windowed --name "UniversalMobileMaster" universal_mobile_master.py
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: Universal-Mobile-Master-Windows
-        path: dist/UniversalMobileMaster.exe
+      - name: Create Release & Upload EXE
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/UniversalMobileMaster.exe
+          tag_name: v1.0-auto
+          name: Auto-Build Windows EXE
+          body: "Automatically generated Windows EXE from latest code."
+          draft: false
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
