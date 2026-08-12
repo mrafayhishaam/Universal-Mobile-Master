@@ -1,14 +1,13 @@
-name: Build Windows EXE
+name: Build Windows EXE & Create Release
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: # Manual run button ke liye
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-latest
-    
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -27,12 +26,12 @@ jobs:
           pyinstaller --onefile --windowed --name "UniversalMobileMaster" universal_mobile_master.py
 
       - name: Create Release & Upload EXE
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: dist/UniversalMobileMaster.exe
-          tag_name: v1.0-auto
-          name: Auto-Build Windows EXE
-          body: "Automatically generated Windows EXE from latest code."
+          tag_name: v1.0-auto-build
+          name: "Latest Auto-Build (Windows)"
+          body: "Automatically generated Windows EXE. Download and run directly."
           draft: false
           prerelease: true
         env:
